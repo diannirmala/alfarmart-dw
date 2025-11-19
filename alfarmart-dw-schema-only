@@ -1,0 +1,1107 @@
+--
+-- PostgreSQL database dump
+--
+
+\restrict riNsArCOg4u9FXed6DuUSmT7dnmfsduDrN3z8woFoN70Gucxcf1EUdGl6XxcqKt
+
+-- Dumped from database version 15.15
+-- Dumped by pg_dump version 15.15
+
+-- Started on 2025-11-19 20:13:51
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 6 (class 2615 OID 16399)
+-- Name: dw; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+CREATE SCHEMA dw;
+
+
+ALTER SCHEMA dw OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 220 (class 1259 OID 16426)
+-- Name: dim_customer; Type: TABLE; Schema: dw; Owner: postgres
+--
+
+CREATE TABLE dw.dim_customer (
+    customer_key integer NOT NULL,
+    full_name text,
+    first_name text,
+    last_name text,
+    gender text,
+    dob date,
+    email text,
+    phone_number text,
+    primary_address_line1 text,
+    primary_address_line2 text,
+    city text,
+    district text,
+    postal_code text,
+    province text,
+    country text DEFAULT 'Indonesia'::text,
+    customer_type text,
+    registration_date date,
+    customer_status text,
+    is_loyalty_member boolean DEFAULT false,
+    loyalty_tier text,
+    loyalty_join_date date,
+    last_purchase_date date,
+    rfm_segment text,
+    preferred_channel text,
+    marketing_consent boolean DEFAULT false,
+    is_contact_allowed boolean DEFAULT true,
+    external_customer_id text,
+    effective_start_date date DEFAULT CURRENT_DATE NOT NULL,
+    effective_end_date date,
+    is_current_record boolean DEFAULT true NOT NULL,
+    version_number integer DEFAULT 1 NOT NULL,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now()
+);
+
+
+ALTER TABLE dw.dim_customer OWNER TO postgres;
+
+--
+-- TOC entry 219 (class 1259 OID 16425)
+-- Name: dim_customer_customer_key_seq; Type: SEQUENCE; Schema: dw; Owner: postgres
+--
+
+CREATE SEQUENCE dw.dim_customer_customer_key_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE dw.dim_customer_customer_key_seq OWNER TO postgres;
+
+--
+-- TOC entry 3442 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: dim_customer_customer_key_seq; Type: SEQUENCE OWNED BY; Schema: dw; Owner: postgres
+--
+
+ALTER SEQUENCE dw.dim_customer_customer_key_seq OWNED BY dw.dim_customer.customer_key;
+
+
+--
+-- TOC entry 216 (class 1259 OID 16401)
+-- Name: dim_date; Type: TABLE; Schema: dw; Owner: postgres
+--
+
+CREATE TABLE dw.dim_date (
+    date_key integer NOT NULL,
+    full_date date NOT NULL,
+    day_of_month smallint,
+    day_of_week smallint,
+    day_name text,
+    day_name_short text,
+    week_of_year smallint,
+    month smallint,
+    month_name text,
+    month_name_short text,
+    quarter smallint,
+    year smallint,
+    is_weekend boolean,
+    is_holiday boolean,
+    holiday_name text,
+    is_payday boolean,
+    is_month_start boolean,
+    is_month_end boolean,
+    is_quarter_start boolean,
+    is_quarter_end boolean,
+    fiscal_year smallint,
+    fiscal_quarter smallint,
+    fiscal_period smallint,
+    fiscal_week smallint,
+    is_fiscal_period_start boolean,
+    is_fiscal_period_end boolean
+);
+
+
+ALTER TABLE dw.dim_date OWNER TO postgres;
+
+--
+-- TOC entry 215 (class 1259 OID 16400)
+-- Name: dim_date_date_key_seq; Type: SEQUENCE; Schema: dw; Owner: postgres
+--
+
+CREATE SEQUENCE dw.dim_date_date_key_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE dw.dim_date_date_key_seq OWNER TO postgres;
+
+--
+-- TOC entry 3443 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: dim_date_date_key_seq; Type: SEQUENCE OWNED BY; Schema: dw; Owner: postgres
+--
+
+ALTER SEQUENCE dw.dim_date_date_key_seq OWNED BY dw.dim_date.date_key;
+
+
+--
+-- TOC entry 230 (class 1259 OID 16494)
+-- Name: dim_delivery_method; Type: TABLE; Schema: dw; Owner: postgres
+--
+
+CREATE TABLE dw.dim_delivery_method (
+    delivery_method_key integer NOT NULL,
+    delivery_method_code text,
+    delivery_method_name text,
+    delivery_method_type text,
+    delivery_provider text,
+    standar_sla_hours integer,
+    max_sla_hours integer,
+    average_delivery_time_hours numeric(6,2),
+    cut_off_time time without time zone,
+    is_weekend_delivery boolean,
+    is_holiday_delivery boolean,
+    coverage_area text,
+    radius_km numeric(6,2),
+    is_locker_supported boolean,
+    is_store_pickup boolean,
+    pricing_model text,
+    base_delivery_fee numeric(12,2),
+    per_km_fee numeric(12,2),
+    per_kg_fee numeric(12,2),
+    minimum_delivery_fee numeric(12,2),
+    free_shipping_threshold_amount numeric(12,2),
+    is_fuel_surcharge boolean,
+    max_weight_kg numeric(8,2),
+    max_volume_cm3 numeric(12,2),
+    is_fragile_allowed boolean,
+    is_perishables_allowed boolean,
+    is_temperature_control boolean,
+    is_courier_tracking_supported boolean,
+    is_real_time_tracking boolean,
+    is_return_supported boolean,
+    is_cash_on_delivery boolean,
+    is_incident_reporting boolean,
+    effective_start_date date,
+    effective_end_date date,
+    is_current_record boolean,
+    version_number integer,
+    created_by text,
+    created_date timestamp without time zone,
+    last_updated_by text,
+    last_updated_date timestamp without time zone
+);
+
+
+ALTER TABLE dw.dim_delivery_method OWNER TO postgres;
+
+--
+-- TOC entry 229 (class 1259 OID 16493)
+-- Name: dim_delivery_method_delivery_method_key_seq; Type: SEQUENCE; Schema: dw; Owner: postgres
+--
+
+CREATE SEQUENCE dw.dim_delivery_method_delivery_method_key_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE dw.dim_delivery_method_delivery_method_key_seq OWNER TO postgres;
+
+--
+-- TOC entry 3444 (class 0 OID 0)
+-- Dependencies: 229
+-- Name: dim_delivery_method_delivery_method_key_seq; Type: SEQUENCE OWNED BY; Schema: dw; Owner: postgres
+--
+
+ALTER SEQUENCE dw.dim_delivery_method_delivery_method_key_seq OWNED BY dw.dim_delivery_method.delivery_method_key;
+
+
+--
+-- TOC entry 222 (class 1259 OID 16444)
+-- Name: dim_payment_method; Type: TABLE; Schema: dw; Owner: postgres
+--
+
+CREATE TABLE dw.dim_payment_method (
+    payment_method_key integer NOT NULL,
+    payment_method_code text,
+    payment_method_name text NOT NULL,
+    payment_method_type text,
+    payment_provider text,
+    payment_channel text,
+    gateway_name text,
+    transaction_fee_percent numeric(5,2),
+    transaction_fee_flat numeric(12,2),
+    is_pci_compliant boolean DEFAULT false,
+    risk_level text,
+    is_reconciliation_required boolean DEFAULT true,
+    settlement_period text,
+    is_active boolean DEFAULT true,
+    valid_from_date date,
+    valid_to_date date,
+    effective_start_date date DEFAULT CURRENT_DATE NOT NULL,
+    effective_end_date date,
+    is_current_record boolean DEFAULT true NOT NULL,
+    version_number integer DEFAULT 1 NOT NULL,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now()
+);
+
+
+ALTER TABLE dw.dim_payment_method OWNER TO postgres;
+
+--
+-- TOC entry 221 (class 1259 OID 16443)
+-- Name: dim_payment_method_payment_method_key_seq; Type: SEQUENCE; Schema: dw; Owner: postgres
+--
+
+CREATE SEQUENCE dw.dim_payment_method_payment_method_key_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE dw.dim_payment_method_payment_method_key_seq OWNER TO postgres;
+
+--
+-- TOC entry 3445 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: dim_payment_method_payment_method_key_seq; Type: SEQUENCE OWNED BY; Schema: dw; Owner: postgres
+--
+
+ALTER SEQUENCE dw.dim_payment_method_payment_method_key_seq OWNED BY dw.dim_payment_method.payment_method_key;
+
+
+--
+-- TOC entry 226 (class 1259 OID 16473)
+-- Name: dim_product; Type: TABLE; Schema: dw; Owner: postgres
+--
+
+CREATE TABLE dw.dim_product (
+    product_key integer NOT NULL,
+    sku text,
+    brand text,
+    short_name text,
+    name text,
+    description text,
+    barcode text,
+    manufacturer_name text,
+    supplier_key integer,
+    department text,
+    category text,
+    subcategory text,
+    product_family text,
+    product_segment text,
+    uom text,
+    size_weight text,
+    pack_size text,
+    variant text,
+    packaging_type text,
+    is_perishable boolean,
+    shelf_life_days integer,
+    cost_price numeric(12,2),
+    standard_retail_price numeric(12,2),
+    tax_category text,
+    is_taxable boolean,
+    is_halal boolean,
+    bpom_registration_number text,
+    allergy_info text,
+    is_nutrition_info boolean,
+    is_active boolean,
+    discontinued_date date,
+    effective_start_date date,
+    effective_end_date date,
+    is_current_record boolean,
+    version_number integer
+);
+
+
+ALTER TABLE dw.dim_product OWNER TO postgres;
+
+--
+-- TOC entry 225 (class 1259 OID 16472)
+-- Name: dim_product_product_key_seq; Type: SEQUENCE; Schema: dw; Owner: postgres
+--
+
+CREATE SEQUENCE dw.dim_product_product_key_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE dw.dim_product_product_key_seq OWNER TO postgres;
+
+--
+-- TOC entry 3446 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: dim_product_product_key_seq; Type: SEQUENCE OWNED BY; Schema: dw; Owner: postgres
+--
+
+ALTER SEQUENCE dw.dim_product_product_key_seq OWNED BY dw.dim_product.product_key;
+
+
+--
+-- TOC entry 228 (class 1259 OID 16484)
+-- Name: dim_promotion; Type: TABLE; Schema: dw; Owner: postgres
+--
+
+CREATE TABLE dw.dim_promotion (
+    promotion_key integer NOT NULL,
+    promotion_code text,
+    promotion_name text,
+    promotion_type text,
+    promotion_category text,
+    promotion_description text,
+    discount_percent numeric(5,2),
+    discount_amount numeric(12,2),
+    maximum_discount_amount numeric(12,2),
+    cashback_amount numeric(12,2),
+    cashback_percent numeric(5,2),
+    is_free_shipping boolean,
+    free_shipping_limit_amount numeric(12,2),
+    min_purchase_amount numeric(12,2),
+    min_quantity_required integer,
+    is_stackable boolean,
+    target_customer_type text,
+    eligible_store_type text,
+    eligible_channel text,
+    eligible_payment_method text,
+    eligible_product_category text,
+    start_date date,
+    end_date date,
+    start_time time without time zone,
+    end_time time without time zone,
+    valid_days_of_week text,
+    valid_hours_range text,
+    is_active boolean,
+    promo_owner_department text,
+    is_supplier_funded boolean,
+    budget_amount numeric(14,2),
+    budget_remaining numeric(14,2),
+    kpi_target numeric(14,2),
+    effective_start_date date,
+    effective_end_date date,
+    is_current_record boolean,
+    version_number integer
+);
+
+
+ALTER TABLE dw.dim_promotion OWNER TO postgres;
+
+--
+-- TOC entry 227 (class 1259 OID 16483)
+-- Name: dim_promotion_promotion_key_seq; Type: SEQUENCE; Schema: dw; Owner: postgres
+--
+
+CREATE SEQUENCE dw.dim_promotion_promotion_key_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE dw.dim_promotion_promotion_key_seq OWNER TO postgres;
+
+--
+-- TOC entry 3447 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: dim_promotion_promotion_key_seq; Type: SEQUENCE OWNED BY; Schema: dw; Owner: postgres
+--
+
+ALTER SEQUENCE dw.dim_promotion_promotion_key_seq OWNED BY dw.dim_promotion.promotion_key;
+
+
+--
+-- TOC entry 224 (class 1259 OID 16463)
+-- Name: dim_store; Type: TABLE; Schema: dw; Owner: postgres
+--
+
+CREATE TABLE dw.dim_store (
+    store_key integer NOT NULL,
+    store_code text,
+    store_name text,
+    store_short_name text,
+    address_line1 text,
+    address_line2 text,
+    city text,
+    district text,
+    postal_code text,
+    province text,
+    country text,
+    store_phone_number text,
+    store_manager_name text,
+    store_manager_contact text,
+    latitude numeric(10,6),
+    longitude numeric(10,6),
+    region text,
+    zone text,
+    sales_region text,
+    store_type text,
+    store_format text,
+    store_size_m2 numeric(10,2),
+    opening_date date,
+    store_status text,
+    is_flagship boolean,
+    is_franchise boolean,
+    operator_company text,
+    opening_time time without time zone,
+    closing_time time without time zone,
+    is_24_hours boolean,
+    timezone text,
+    fulfillment_type text,
+    has_on_site_warehouse boolean,
+    pos_system_type text,
+    tax_registration_number text,
+    is_vat_registered boolean,
+    last_audit_date date,
+    last_planogram_check_date date,
+    audit_score numeric(5,2),
+    effective_start_date date,
+    effective_end_date date,
+    is_current_record boolean,
+    version_number integer
+);
+
+
+ALTER TABLE dw.dim_store OWNER TO postgres;
+
+--
+-- TOC entry 223 (class 1259 OID 16462)
+-- Name: dim_store_store_key_seq; Type: SEQUENCE; Schema: dw; Owner: postgres
+--
+
+CREATE SEQUENCE dw.dim_store_store_key_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE dw.dim_store_store_key_seq OWNER TO postgres;
+
+--
+-- TOC entry 3448 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: dim_store_store_key_seq; Type: SEQUENCE OWNED BY; Schema: dw; Owner: postgres
+--
+
+ALTER SEQUENCE dw.dim_store_store_key_seq OWNED BY dw.dim_store.store_key;
+
+
+--
+-- TOC entry 232 (class 1259 OID 16504)
+-- Name: dim_supplier; Type: TABLE; Schema: dw; Owner: postgres
+--
+
+CREATE TABLE dw.dim_supplier (
+    supplier_key integer NOT NULL,
+    supplier_code text,
+    supplier_name text,
+    supplier_short_name text,
+    supplier_type text,
+    business_model text,
+    ownership_type text,
+    address_line1 text,
+    address_line2 text,
+    city text,
+    district text,
+    province text,
+    postal_code text,
+    country text,
+    phone_number text,
+    email text,
+    website text,
+    primary_contact_person text,
+    primary_contact_phone text,
+    primary_contact_email text,
+    delivery_lead_time_days integer,
+    max_lead_time_days integer,
+    delivery_method_default text,
+    delivery_frequency text,
+    delivery_cutoff_time time without time zone,
+    warehouse_location text,
+    supply_region text,
+    product_categories_supplied text,
+    brand_owned_flag boolean,
+    exclusive_supplier_flag boolean,
+    halal_certified_supplier boolean,
+    supplier_rating numeric(5,2),
+    quality_score numeric(5,2),
+    on_time_delivery_rate numeric(5,2),
+    defective_rate_percent numeric(5,2),
+    dispute_count integer,
+    risk_level text,
+    compliance_status text,
+    payment_terms text,
+    contract_start_date date,
+    contract_end_date date,
+    minimum_order_quantity integer,
+    return_policy_description text,
+    credit_limit_amount numeric(14,2),
+    effective_start_date date,
+    effective_end_date date,
+    is_current_record boolean,
+    version_number integer
+);
+
+
+ALTER TABLE dw.dim_supplier OWNER TO postgres;
+
+--
+-- TOC entry 231 (class 1259 OID 16503)
+-- Name: dim_supplier_supplier_key_seq; Type: SEQUENCE; Schema: dw; Owner: postgres
+--
+
+CREATE SEQUENCE dw.dim_supplier_supplier_key_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE dw.dim_supplier_supplier_key_seq OWNER TO postgres;
+
+--
+-- TOC entry 3449 (class 0 OID 0)
+-- Dependencies: 231
+-- Name: dim_supplier_supplier_key_seq; Type: SEQUENCE OWNED BY; Schema: dw; Owner: postgres
+--
+
+ALTER SEQUENCE dw.dim_supplier_supplier_key_seq OWNED BY dw.dim_supplier.supplier_key;
+
+
+--
+-- TOC entry 218 (class 1259 OID 16412)
+-- Name: dim_time; Type: TABLE; Schema: dw; Owner: postgres
+--
+
+CREATE TABLE dw.dim_time (
+    time_key integer NOT NULL,
+    full_time time without time zone NOT NULL,
+    hour smallint NOT NULL,
+    minute smallint NOT NULL,
+    second smallint NOT NULL,
+    hour_12 smallint NOT NULL,
+    am_pm text NOT NULL,
+    quarter_hour smallint NOT NULL,
+    shift_id smallint,
+    peak_type text,
+    is_peak_hour boolean DEFAULT false,
+    is_business_hour boolean DEFAULT false,
+    is_order_cutoff boolean DEFAULT false
+);
+
+
+ALTER TABLE dw.dim_time OWNER TO postgres;
+
+--
+-- TOC entry 217 (class 1259 OID 16411)
+-- Name: dim_time_time_key_seq; Type: SEQUENCE; Schema: dw; Owner: postgres
+--
+
+CREATE SEQUENCE dw.dim_time_time_key_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE dw.dim_time_time_key_seq OWNER TO postgres;
+
+--
+-- TOC entry 3450 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: dim_time_time_key_seq; Type: SEQUENCE OWNED BY; Schema: dw; Owner: postgres
+--
+
+ALTER SEQUENCE dw.dim_time_time_key_seq OWNED BY dw.dim_time.time_key;
+
+
+--
+-- TOC entry 234 (class 1259 OID 16514)
+-- Name: fact_sales_line_item; Type: TABLE; Schema: dw; Owner: postgres
+--
+
+CREATE TABLE dw.fact_sales_line_item (
+    fact_sales_key bigint NOT NULL,
+    date_key integer,
+    time_key integer,
+    store_key integer,
+    product_key integer,
+    promotion_key integer,
+    customer_key integer,
+    delivery_method_key integer,
+    payment_key integer,
+    pos_transaction_number text,
+    quantity integer,
+    unit_price numeric(12,2),
+    extended_price numeric(14,2),
+    discount_amount numeric(14,2),
+    tax_amount numeric(14,2),
+    gross_margin numeric(14,2),
+    line_total numeric(14,2),
+    promotion_savings numeric(14,2),
+    loyalty_points_earned integer,
+    loyalty_points_redeemed integer
+);
+
+
+ALTER TABLE dw.fact_sales_line_item OWNER TO postgres;
+
+--
+-- TOC entry 233 (class 1259 OID 16513)
+-- Name: fact_sales_line_item_fact_sales_key_seq; Type: SEQUENCE; Schema: dw; Owner: postgres
+--
+
+CREATE SEQUENCE dw.fact_sales_line_item_fact_sales_key_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE dw.fact_sales_line_item_fact_sales_key_seq OWNER TO postgres;
+
+--
+-- TOC entry 3451 (class 0 OID 0)
+-- Dependencies: 233
+-- Name: fact_sales_line_item_fact_sales_key_seq; Type: SEQUENCE OWNED BY; Schema: dw; Owner: postgres
+--
+
+ALTER SEQUENCE dw.fact_sales_line_item_fact_sales_key_seq OWNED BY dw.fact_sales_line_item.fact_sales_key;
+
+
+--
+-- TOC entry 3224 (class 2604 OID 16429)
+-- Name: dim_customer customer_key; Type: DEFAULT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_customer ALTER COLUMN customer_key SET DEFAULT nextval('dw.dim_customer_customer_key_seq'::regclass);
+
+
+--
+-- TOC entry 3219 (class 2604 OID 16404)
+-- Name: dim_date date_key; Type: DEFAULT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_date ALTER COLUMN date_key SET DEFAULT nextval('dw.dim_date_date_key_seq'::regclass);
+
+
+--
+-- TOC entry 3246 (class 2604 OID 16497)
+-- Name: dim_delivery_method delivery_method_key; Type: DEFAULT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_delivery_method ALTER COLUMN delivery_method_key SET DEFAULT nextval('dw.dim_delivery_method_delivery_method_key_seq'::regclass);
+
+
+--
+-- TOC entry 3234 (class 2604 OID 16447)
+-- Name: dim_payment_method payment_method_key; Type: DEFAULT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_payment_method ALTER COLUMN payment_method_key SET DEFAULT nextval('dw.dim_payment_method_payment_method_key_seq'::regclass);
+
+
+--
+-- TOC entry 3244 (class 2604 OID 16476)
+-- Name: dim_product product_key; Type: DEFAULT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_product ALTER COLUMN product_key SET DEFAULT nextval('dw.dim_product_product_key_seq'::regclass);
+
+
+--
+-- TOC entry 3245 (class 2604 OID 16487)
+-- Name: dim_promotion promotion_key; Type: DEFAULT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_promotion ALTER COLUMN promotion_key SET DEFAULT nextval('dw.dim_promotion_promotion_key_seq'::regclass);
+
+
+--
+-- TOC entry 3243 (class 2604 OID 16466)
+-- Name: dim_store store_key; Type: DEFAULT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_store ALTER COLUMN store_key SET DEFAULT nextval('dw.dim_store_store_key_seq'::regclass);
+
+
+--
+-- TOC entry 3247 (class 2604 OID 16507)
+-- Name: dim_supplier supplier_key; Type: DEFAULT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_supplier ALTER COLUMN supplier_key SET DEFAULT nextval('dw.dim_supplier_supplier_key_seq'::regclass);
+
+
+--
+-- TOC entry 3220 (class 2604 OID 16415)
+-- Name: dim_time time_key; Type: DEFAULT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_time ALTER COLUMN time_key SET DEFAULT nextval('dw.dim_time_time_key_seq'::regclass);
+
+
+--
+-- TOC entry 3248 (class 2604 OID 16517)
+-- Name: fact_sales_line_item fact_sales_key; Type: DEFAULT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.fact_sales_line_item ALTER COLUMN fact_sales_key SET DEFAULT nextval('dw.fact_sales_line_item_fact_sales_key_seq'::regclass);
+
+
+--
+-- TOC entry 3422 (class 0 OID 16426)
+-- Dependencies: 220
+-- Data for Name: dim_customer; Type: TABLE DATA; Schema: dw; Owner: postgres
+--
+
+COPY dw.dim_customer (customer_key, full_name, first_name, last_name, gender, dob, email, phone_number, primary_address_line1, primary_address_line2, city, district, postal_code, province, country, customer_type, registration_date, customer_status, is_loyalty_member, loyalty_tier, loyalty_join_date, last_purchase_date, rfm_segment, preferred_channel, marketing_consent, is_contact_allowed, external_customer_id, effective_start_date, effective_end_date, is_current_record, version_number, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3418 (class 0 OID 16401)
+-- Dependencies: 216
+-- Data for Name: dim_date; Type: TABLE DATA; Schema: dw; Owner: postgres
+--
+
+COPY dw.dim_date (date_key, full_date, day_of_month, day_of_week, day_name, day_name_short, week_of_year, month, month_name, month_name_short, quarter, year, is_weekend, is_holiday, holiday_name, is_payday, is_month_start, is_month_end, is_quarter_start, is_quarter_end, fiscal_year, fiscal_quarter, fiscal_period, fiscal_week, is_fiscal_period_start, is_fiscal_period_end) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3432 (class 0 OID 16494)
+-- Dependencies: 230
+-- Data for Name: dim_delivery_method; Type: TABLE DATA; Schema: dw; Owner: postgres
+--
+
+COPY dw.dim_delivery_method (delivery_method_key, delivery_method_code, delivery_method_name, delivery_method_type, delivery_provider, standar_sla_hours, max_sla_hours, average_delivery_time_hours, cut_off_time, is_weekend_delivery, is_holiday_delivery, coverage_area, radius_km, is_locker_supported, is_store_pickup, pricing_model, base_delivery_fee, per_km_fee, per_kg_fee, minimum_delivery_fee, free_shipping_threshold_amount, is_fuel_surcharge, max_weight_kg, max_volume_cm3, is_fragile_allowed, is_perishables_allowed, is_temperature_control, is_courier_tracking_supported, is_real_time_tracking, is_return_supported, is_cash_on_delivery, is_incident_reporting, effective_start_date, effective_end_date, is_current_record, version_number, created_by, created_date, last_updated_by, last_updated_date) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3424 (class 0 OID 16444)
+-- Dependencies: 222
+-- Data for Name: dim_payment_method; Type: TABLE DATA; Schema: dw; Owner: postgres
+--
+
+COPY dw.dim_payment_method (payment_method_key, payment_method_code, payment_method_name, payment_method_type, payment_provider, payment_channel, gateway_name, transaction_fee_percent, transaction_fee_flat, is_pci_compliant, risk_level, is_reconciliation_required, settlement_period, is_active, valid_from_date, valid_to_date, effective_start_date, effective_end_date, is_current_record, version_number, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3428 (class 0 OID 16473)
+-- Dependencies: 226
+-- Data for Name: dim_product; Type: TABLE DATA; Schema: dw; Owner: postgres
+--
+
+COPY dw.dim_product (product_key, sku, brand, short_name, name, description, barcode, manufacturer_name, supplier_key, department, category, subcategory, product_family, product_segment, uom, size_weight, pack_size, variant, packaging_type, is_perishable, shelf_life_days, cost_price, standard_retail_price, tax_category, is_taxable, is_halal, bpom_registration_number, allergy_info, is_nutrition_info, is_active, discontinued_date, effective_start_date, effective_end_date, is_current_record, version_number) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3430 (class 0 OID 16484)
+-- Dependencies: 228
+-- Data for Name: dim_promotion; Type: TABLE DATA; Schema: dw; Owner: postgres
+--
+
+COPY dw.dim_promotion (promotion_key, promotion_code, promotion_name, promotion_type, promotion_category, promotion_description, discount_percent, discount_amount, maximum_discount_amount, cashback_amount, cashback_percent, is_free_shipping, free_shipping_limit_amount, min_purchase_amount, min_quantity_required, is_stackable, target_customer_type, eligible_store_type, eligible_channel, eligible_payment_method, eligible_product_category, start_date, end_date, start_time, end_time, valid_days_of_week, valid_hours_range, is_active, promo_owner_department, is_supplier_funded, budget_amount, budget_remaining, kpi_target, effective_start_date, effective_end_date, is_current_record, version_number) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3426 (class 0 OID 16463)
+-- Dependencies: 224
+-- Data for Name: dim_store; Type: TABLE DATA; Schema: dw; Owner: postgres
+--
+
+COPY dw.dim_store (store_key, store_code, store_name, store_short_name, address_line1, address_line2, city, district, postal_code, province, country, store_phone_number, store_manager_name, store_manager_contact, latitude, longitude, region, zone, sales_region, store_type, store_format, store_size_m2, opening_date, store_status, is_flagship, is_franchise, operator_company, opening_time, closing_time, is_24_hours, timezone, fulfillment_type, has_on_site_warehouse, pos_system_type, tax_registration_number, is_vat_registered, last_audit_date, last_planogram_check_date, audit_score, effective_start_date, effective_end_date, is_current_record, version_number) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3434 (class 0 OID 16504)
+-- Dependencies: 232
+-- Data for Name: dim_supplier; Type: TABLE DATA; Schema: dw; Owner: postgres
+--
+
+COPY dw.dim_supplier (supplier_key, supplier_code, supplier_name, supplier_short_name, supplier_type, business_model, ownership_type, address_line1, address_line2, city, district, province, postal_code, country, phone_number, email, website, primary_contact_person, primary_contact_phone, primary_contact_email, delivery_lead_time_days, max_lead_time_days, delivery_method_default, delivery_frequency, delivery_cutoff_time, warehouse_location, supply_region, product_categories_supplied, brand_owned_flag, exclusive_supplier_flag, halal_certified_supplier, supplier_rating, quality_score, on_time_delivery_rate, defective_rate_percent, dispute_count, risk_level, compliance_status, payment_terms, contract_start_date, contract_end_date, minimum_order_quantity, return_policy_description, credit_limit_amount, effective_start_date, effective_end_date, is_current_record, version_number) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3420 (class 0 OID 16412)
+-- Dependencies: 218
+-- Data for Name: dim_time; Type: TABLE DATA; Schema: dw; Owner: postgres
+--
+
+COPY dw.dim_time (time_key, full_time, hour, minute, second, hour_12, am_pm, quarter_hour, shift_id, peak_type, is_peak_hour, is_business_hour, is_order_cutoff) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3436 (class 0 OID 16514)
+-- Dependencies: 234
+-- Data for Name: fact_sales_line_item; Type: TABLE DATA; Schema: dw; Owner: postgres
+--
+
+COPY dw.fact_sales_line_item (fact_sales_key, date_key, time_key, store_key, product_key, promotion_key, customer_key, delivery_method_key, payment_key, pos_transaction_number, quantity, unit_price, extended_price, discount_amount, tax_amount, gross_margin, line_total, promotion_savings, loyalty_points_earned, loyalty_points_redeemed) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3452 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: dim_customer_customer_key_seq; Type: SEQUENCE SET; Schema: dw; Owner: postgres
+--
+
+SELECT pg_catalog.setval('dw.dim_customer_customer_key_seq', 1, false);
+
+
+--
+-- TOC entry 3453 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: dim_date_date_key_seq; Type: SEQUENCE SET; Schema: dw; Owner: postgres
+--
+
+SELECT pg_catalog.setval('dw.dim_date_date_key_seq', 1, false);
+
+
+--
+-- TOC entry 3454 (class 0 OID 0)
+-- Dependencies: 229
+-- Name: dim_delivery_method_delivery_method_key_seq; Type: SEQUENCE SET; Schema: dw; Owner: postgres
+--
+
+SELECT pg_catalog.setval('dw.dim_delivery_method_delivery_method_key_seq', 1, false);
+
+
+--
+-- TOC entry 3455 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: dim_payment_method_payment_method_key_seq; Type: SEQUENCE SET; Schema: dw; Owner: postgres
+--
+
+SELECT pg_catalog.setval('dw.dim_payment_method_payment_method_key_seq', 1, false);
+
+
+--
+-- TOC entry 3456 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: dim_product_product_key_seq; Type: SEQUENCE SET; Schema: dw; Owner: postgres
+--
+
+SELECT pg_catalog.setval('dw.dim_product_product_key_seq', 1, false);
+
+
+--
+-- TOC entry 3457 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: dim_promotion_promotion_key_seq; Type: SEQUENCE SET; Schema: dw; Owner: postgres
+--
+
+SELECT pg_catalog.setval('dw.dim_promotion_promotion_key_seq', 1, false);
+
+
+--
+-- TOC entry 3458 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: dim_store_store_key_seq; Type: SEQUENCE SET; Schema: dw; Owner: postgres
+--
+
+SELECT pg_catalog.setval('dw.dim_store_store_key_seq', 1, false);
+
+
+--
+-- TOC entry 3459 (class 0 OID 0)
+-- Dependencies: 231
+-- Name: dim_supplier_supplier_key_seq; Type: SEQUENCE SET; Schema: dw; Owner: postgres
+--
+
+SELECT pg_catalog.setval('dw.dim_supplier_supplier_key_seq', 1, false);
+
+
+--
+-- TOC entry 3460 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: dim_time_time_key_seq; Type: SEQUENCE SET; Schema: dw; Owner: postgres
+--
+
+SELECT pg_catalog.setval('dw.dim_time_time_key_seq', 1, false);
+
+
+--
+-- TOC entry 3461 (class 0 OID 0)
+-- Dependencies: 233
+-- Name: fact_sales_line_item_fact_sales_key_seq; Type: SEQUENCE SET; Schema: dw; Owner: postgres
+--
+
+SELECT pg_catalog.setval('dw.fact_sales_line_item_fact_sales_key_seq', 1, false);
+
+
+--
+-- TOC entry 3258 (class 2606 OID 16442)
+-- Name: dim_customer dim_customer_pkey; Type: CONSTRAINT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_customer
+    ADD CONSTRAINT dim_customer_pkey PRIMARY KEY (customer_key);
+
+
+--
+-- TOC entry 3250 (class 2606 OID 16410)
+-- Name: dim_date dim_date_full_date_key; Type: CONSTRAINT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_date
+    ADD CONSTRAINT dim_date_full_date_key UNIQUE (full_date);
+
+
+--
+-- TOC entry 3252 (class 2606 OID 16408)
+-- Name: dim_date dim_date_pkey; Type: CONSTRAINT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_date
+    ADD CONSTRAINT dim_date_pkey PRIMARY KEY (date_key);
+
+
+--
+-- TOC entry 3270 (class 2606 OID 16501)
+-- Name: dim_delivery_method dim_delivery_method_pkey; Type: CONSTRAINT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_delivery_method
+    ADD CONSTRAINT dim_delivery_method_pkey PRIMARY KEY (delivery_method_key);
+
+
+--
+-- TOC entry 3260 (class 2606 OID 16461)
+-- Name: dim_payment_method dim_payment_method_payment_method_code_key; Type: CONSTRAINT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_payment_method
+    ADD CONSTRAINT dim_payment_method_payment_method_code_key UNIQUE (payment_method_code);
+
+
+--
+-- TOC entry 3262 (class 2606 OID 16459)
+-- Name: dim_payment_method dim_payment_method_pkey; Type: CONSTRAINT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_payment_method
+    ADD CONSTRAINT dim_payment_method_pkey PRIMARY KEY (payment_method_key);
+
+
+--
+-- TOC entry 3266 (class 2606 OID 16480)
+-- Name: dim_product dim_product_pkey; Type: CONSTRAINT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_product
+    ADD CONSTRAINT dim_product_pkey PRIMARY KEY (product_key);
+
+
+--
+-- TOC entry 3268 (class 2606 OID 16491)
+-- Name: dim_promotion dim_promotion_pkey; Type: CONSTRAINT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_promotion
+    ADD CONSTRAINT dim_promotion_pkey PRIMARY KEY (promotion_key);
+
+
+--
+-- TOC entry 3264 (class 2606 OID 16470)
+-- Name: dim_store dim_store_pkey; Type: CONSTRAINT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_store
+    ADD CONSTRAINT dim_store_pkey PRIMARY KEY (store_key);
+
+
+--
+-- TOC entry 3272 (class 2606 OID 16511)
+-- Name: dim_supplier dim_supplier_pkey; Type: CONSTRAINT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_supplier
+    ADD CONSTRAINT dim_supplier_pkey PRIMARY KEY (supplier_key);
+
+
+--
+-- TOC entry 3254 (class 2606 OID 16424)
+-- Name: dim_time dim_time_full_time_key; Type: CONSTRAINT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_time
+    ADD CONSTRAINT dim_time_full_time_key UNIQUE (full_time);
+
+
+--
+-- TOC entry 3256 (class 2606 OID 16422)
+-- Name: dim_time dim_time_pkey; Type: CONSTRAINT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.dim_time
+    ADD CONSTRAINT dim_time_pkey PRIMARY KEY (time_key);
+
+
+--
+-- TOC entry 3274 (class 2606 OID 16521)
+-- Name: fact_sales_line_item fact_sales_line_item_pkey; Type: CONSTRAINT; Schema: dw; Owner: postgres
+--
+
+ALTER TABLE ONLY dw.fact_sales_line_item
+    ADD CONSTRAINT fact_sales_line_item_pkey PRIMARY KEY (fact_sales_key);
+
+
+-- Completed on 2025-11-19 20:13:51
+
+--
+-- PostgreSQL database dump complete
+--
+
+\unrestrict riNsArCOg4u9FXed6DuUSmT7dnmfsduDrN3z8woFoN70Gucxcf1EUdGl6XxcqKt
+
