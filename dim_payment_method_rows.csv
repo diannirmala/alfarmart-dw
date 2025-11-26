@@ -1,0 +1,16 @@
+payment_method_key,payment_method_code,payment_method_name,payment_method_type,payment_provider,payment_channel,gateway_name,is_cash,is_card,is_e_wallet,is_qris,is_cod,is_online_payment,transaction_fee_percent,transaction_fee_flat,settlement_period_days,is_active,effective_start_date,effective_end_date,is_current_record,version_number
+1,CASH,Tunai,cash,Alfamart,in_store_cash,Internal,true,false,false,false,false,false,0.00,0.00,0,true,2010-01-01,9999-12-31,true,1
+2,DEBIT_BCA_EDC,Kartu Debit BCA EDC,debit_card,BCA,in_store_edc,EDC BCA,false,true,false,false,false,false,1.10,0.00,1,true,2012-01-01,9999-12-31,true,1
+3,DEBIT_MANDIRI_EDC,Kartu Debit Mandiri EDC,debit_card,Bank Mandiri,in_store_edc,EDC Mandiri,false,true,false,false,false,false,1.20,0.00,1,true,2012-06-01,9999-12-31,true,1
+4,DEBIT_BRI_EDC,Kartu Debit BRI EDC,debit_card,BRI,in_store_edc,EDC BRI,false,true,false,false,false,false,1.10,0.00,1,true,2013-01-01,9999-12-31,true,1
+5,CREDIT_VISA_EDC,Kartu Kredit VISA,credit_card,VISA,in_store_edc,Bank Acquirer,false,true,false,false,false,false,2.00,0.00,2,true,2014-01-01,9999-12-31,true,1
+6,CREDIT_MC_EDC,Kartu Kredit Mastercard,credit_card,Mastercard,in_store_edc,Bank Acquirer,false,true,false,false,false,false,2.10,0.00,2,true,2014-01-01,9999-12-31,true,1
+7,EWALLET_OVO,OVO e-Wallet,e_wallet,OVO,in_store_edc,OVO Gateway,false,false,true,false,false,true,1.80,0.00,1,true,2018-01-01,9999-12-31,true,1
+8,EWALLET_DANA,DANA e-Wallet,e_wallet,DANA,in_store_edc,DANA Gateway,false,false,true,false,false,true,1.80,0.00,1,true,2018-06-01,9999-12-31,true,1
+9,EWALLET_GOPAY,GoPay e-Wallet,e_wallet,GoPay,in_store_edc,Gojek Pay Gateway,false,false,true,false,false,true,1.80,0.00,1,true,2019-01-01,9999-12-31,true,1
+10,EWALLET_SHOPEEPAY,ShopeePay e-Wallet,e_wallet,ShopeePay,in_store_edc,ShopeePay Gateway,false,false,true,false,false,true,1.80,0.00,1,true,2019-06-01,9999-12-31,true,1
+11,QRIS_STATIC,QRIS Static Store,qris,QRIS Nasional,qris_static,QRIS Switcher,false,false,false,true,false,true,0.70,0.00,1,true,2020-01-01,9999-12-31,true,1
+12,QRIS_DYNAMIC,QRIS Dynamic App,qris,QRIS Nasional,qris_dynamic,Payment Gateway,false,false,false,true,false,true,0.70,0.00,1,true,2021-01-01,9999-12-31,true,1
+13,VA_BCA_ONLINE,Transfer VA BCA,bank_transfer,BCA,online_gateway,Midtrans,false,false,false,false,false,true,1.00,2500.00,1,true,2017-01-01,9999-12-31,true,1
+14,VA_MANDIRI_ONLINE,Transfer VA Mandiri,bank_transfer,Bank Mandiri,online_gateway,Midtrans,false,false,false,false,false,true,1.00,2500.00,1,true,2017-01-01,9999-12-31,true,1
+15,COD_DELIVERY,Cash on Delivery,cash,Alfamart Delivery,in_store_cash,Kurir Internal,true,false,false,false,true,false,0.00,0.00,0,true,2020-06-01,9999-12-31,true,1
